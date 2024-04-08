@@ -98,7 +98,7 @@ func postJson(timestamp string, clientKey string, signatureBase64 string) {
 	}
 
 	// Send the POST request
-	url := "https://sandbox-gateway-test.thesmilepay.com/v1.0/access-token/b2b"
+	url := "https://sandbox-gateway-test.smilepayz.com/v1.0/access-token/b2b"
 	request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(jsonPayload))
 	if err != nil {
 		fmt.Println("Error creating request:", err)

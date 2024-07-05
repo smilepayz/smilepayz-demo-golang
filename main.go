@@ -1,5 +1,9 @@
 package main
 
+import (
+	"TheSmilePay-SDK-Golang/v1"
+)
+
 func main() {
 	//fmt.Println("Hello, World!")
 
@@ -7,5 +11,7 @@ func main() {
 	//generateRSA()
 
 	//then AccessToken
-	accessToken()
+	v1.AccessToken()
+	//fmt.Println(v1.GetTimeStamp())
+
 }

@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"TheSmilePay-SDK-Golang/common"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -16,16 +17,16 @@ func AccessToken() string {
 	fmt.Println("=====> step2 : Create Access Token. You need set your timestamp|clientKey|privateKey")
 
 	//get time
-	timestamp := GetTimeStamp()
+	timestamp := common.GetTimeStamp()
 	//get merchantId from merchant platform
-	merchantId := merchantIdSandBox
-	baseUrl := baseUrlSanbox
+	merchantId := common.MerchantIdSandBox
+	baseUrl := common.BaseUrlSanbox
 	//build string to sign
 	stringToSign := merchantId + "|" + timestamp
 	fmt.Println(stringToSign)
 
 	//signature
-	signatureString, done := Sha256RshSignature(stringToSign, PrivateKeyStr)
+	signatureString, done := common.Sha256RshSignature(stringToSign, common.PrivateKeyStr)
 	if done {
 		return ""
 	}
@@ -87,7 +88,7 @@ func postAccessTokenRequest(timestamp string, merchantId string, signatureString
 	// 打印响应体
 	fmt.Println("Response Body:", bodyString)
 
-	var accessTokenBean AccessTokenBean
+	var accessTokenBean common.AccessTokenBean
 
 	err = json.Unmarshal([]byte(bodyString), &accessTokenBean)
 	if err != nil {

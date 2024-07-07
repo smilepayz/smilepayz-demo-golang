@@ -1,4 +1,4 @@
-package v1
+package common
 
 type Money struct {
 	Amount   int    `json:"amount"`

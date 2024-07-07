@@ -1,4 +1,4 @@
-package v1
+package common
 
 type Merchant struct {
 	MerchantId   string `json:"merchantId"`

@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"TheSmilePay-SDK-Golang/common"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -14,36 +15,36 @@ func PayInRequestDemoV1() {
 
 	accessToken := AccessToken()
 	//get time
-	timestamp := GetTimeStamp()
+	timestamp := common.GetTimeStamp()
 	//get merchantId from merchant platform
-	merchantId := merchantIdSandBox
-	baseUrl := baseUrlSanbox
-	merchantSercet := merchantSecretSandBox
+	merchantId := common.MerchantIdSandBox
+	baseUrl := common.BaseUrlSanbox
+	merchantSercet := common.MerchantSecretSandBox
 	//build string to sign
 	stringToSign := merchantId + "|" + timestamp
 	fmt.Println(stringToSign)
 
-	money := Money{Currency: "IDR", Amount: 10000}
-	merchant := Merchant{MerchantId: merchantId}
+	money := common.Money{Currency: "IDR", Amount: 10000}
+	merchant := common.Merchant{MerchantId: merchantId}
 
-	payRequest := PayInRequest{OrderNo: merchantId + "ddfd",
+	payRequest := common.PayInRequest{OrderNo: merchantId + "ddfd",
 		Purpose:  "for test demo",
 		Merchant: merchant,
 		Money:    money,
 		Area:     10, PaymentMethod: "BCA"}
 	requestJson, _ := json.Marshal(payRequest)
 
-	lowerString := LowerHexSha256Body(string(requestJson))
+	lowerString := common.LowerHexSha256Body(string(requestJson))
 
 	signString := "POST:/v1.0/transaction/pay-in:" + accessToken + ":" + lowerString + ":" + timestamp
 	//signature
-	signatureString, _ := hmacSHA512(signString, merchantSercet)
+	signatureString, _ := common.HmacSHA512(signString, merchantSercet)
 
 	//postJson
 	postPayInRequestDemoV1(timestamp, merchantId, signatureString, baseUrl, accessToken, payRequest)
 }
 
-func postPayInRequestDemoV1(timestamp string, merchantId string, signatureString string, baseUrl string, accessToken string, payRequest PayInRequest) string {
+func postPayInRequestDemoV1(timestamp string, merchantId string, signatureString string, baseUrl string, accessToken string, payRequest common.PayInRequest) string {
 	// Create the JSON payload
 	requestJson, _ := json.Marshal(payRequest)
 
@@ -91,7 +92,7 @@ func postPayInRequestDemoV1(timestamp string, merchantId string, signatureString
 	// 打印响应体
 	fmt.Println("Response Body:", bodyString)
 
-	var accessTokenBean AccessTokenBean
+	var accessTokenBean common.AccessTokenBean
 
 	err = json.Unmarshal([]byte(bodyString), &accessTokenBean)
 	if err != nil {

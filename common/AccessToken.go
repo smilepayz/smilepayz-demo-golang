@@ -1,4 +1,4 @@
-package v1
+package common
 
 type AccessTokenBean struct {
 	Code            string `json:"code"`

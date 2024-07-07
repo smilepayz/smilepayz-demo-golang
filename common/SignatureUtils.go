@@ -1,4 +1,4 @@
-package v1
+package common
 
 import (
 	"crypto"
@@ -75,8 +75,8 @@ func GetTimeStamp() string {
 	return formattedTime
 }
 
-// hmacSHA512 计算 HMAC-SHA512 签名并返回 Base64 编码的结果
-func hmacSHA512(signData, secret string) (string, error) {
+// HmacSHA512 计算 HMAC-SHA512 签名并返回 Base64 编码的结果
+func HmacSHA512(signData, secret string) (string, error) {
 	// 创建 HMAC-SHA512 哈希器
 	h := hmac.New(sha512.New, []byte(secret))
 

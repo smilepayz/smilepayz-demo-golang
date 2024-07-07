@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"TheSmilePay-SDK-Golang/common"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -14,36 +15,36 @@ func PayOutRequestDemo() {
 
 	accessToken := AccessToken()
 	//get time
-	timestamp := GetTimeStamp()
+	timestamp := common.GetTimeStamp()
 	//get merchantId from merchant platform
-	merchantId := merchantIdSandBox
-	baseUrl := baseUrlSanbox
-	merchantSercet := merchantSecretSandBox
+	merchantId := common.MerchantIdSandBox
+	baseUrl := common.BaseUrlSanbox
+	merchantSercet := common.MerchantSecretSandBox
 	//build string to sign
 	stringToSign := merchantId + "|" + timestamp
 	fmt.Println(stringToSign)
 
-	money := Money{Currency: "IDR", Amount: 10000}
-	merchant := Merchant{MerchantId: merchantId}
+	money := common.Money{Currency: "IDR", Amount: 10000}
+	merchant := common.Merchant{MerchantId: merchantId}
 
-	payoutRequest := PayOutRequest{OrderNo: merchantId + "ddfd",
+	payoutRequest := common.PayOutRequest{OrderNo: merchantId + "ddfd",
 		Purpose:     "for test demo",
 		Merchant:    merchant,
 		Money:       money,
 		CashAccount: "1231232132", Area: 10, PaymentMethod: "BCA"}
 	requestJson, _ := json.Marshal(payoutRequest)
 
-	lowerString := LowerHexSha256Body(string(requestJson))
+	lowerString := common.LowerHexSha256Body(string(requestJson))
 
 	signString := "POST:" + "/v1.0/disbursement/cash-out" + ":" + accessToken + ":" + lowerString + ":" + timestamp
 	//signature
-	signatureString, _ := hmacSHA512(signString, merchantSercet)
+	signatureString, _ := common.HmacSHA512(signString, merchantSercet)
 
 	//postJson
 	postPayOutRequestDemo(timestamp, merchantId, signatureString, baseUrl, accessToken, payoutRequest)
 }
 
-func postPayOutRequestDemo(timestamp string, merchantId string, signatureString string, baseUrl string, accessToken string, payoutRequest PayOutRequest) string {
+func postPayOutRequestDemo(timestamp string, merchantId string, signatureString string, baseUrl string, accessToken string, payoutRequest common.PayOutRequest) string {
 	// Create the JSON payload
 	requestJson, _ := json.Marshal(payoutRequest)
 
@@ -91,7 +92,7 @@ func postPayOutRequestDemo(timestamp string, merchantId string, signatureString 
 	// 打印响应体
 	fmt.Println("Response Body:", bodyString)
 
-	var accessTokenBean AccessTokenBean
+	var accessTokenBean common.AccessTokenBean
 
 	err = json.Unmarshal([]byte(bodyString), &accessTokenBean)
 	if err != nil {

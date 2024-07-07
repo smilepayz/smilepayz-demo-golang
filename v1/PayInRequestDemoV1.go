@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func PayOutRequestDemo() {
+func PayInRequestDemoV1() {
 
 	fmt.Println("=====> step2 : Create Access Token. You need set your timestamp|clientKey|privateKey")
 
@@ -26,29 +26,29 @@ func PayOutRequestDemo() {
 	money := Money{Currency: "IDR", Amount: 10000}
 	merchant := Merchant{MerchantId: merchantId}
 
-	payoutRequest := PayOutRequest{OrderNo: merchantId + "ddfd",
-		Purpose:     "for test demo",
-		Merchant:    merchant,
-		Money:       money,
-		CashAccount: "1231232132", Area: 10, PaymentMethod: "BCA"}
-	requestJson, _ := json.Marshal(payoutRequest)
+	payRequest := PayInRequest{OrderNo: merchantId + "ddfd",
+		Purpose:  "for test demo",
+		Merchant: merchant,
+		Money:    money,
+		Area:     10, PaymentMethod: "BCA"}
+	requestJson, _ := json.Marshal(payRequest)
 
 	lowerString := LowerHexSha256Body(string(requestJson))
 
-	signString := "POST:" + "/v1.0/disbursement/cash-out" + ":" + accessToken + ":" + lowerString + ":" + timestamp
+	signString := "POST:/v1.0/transaction/pay-in:" + accessToken + ":" + lowerString + ":" + timestamp
 	//signature
 	signatureString, _ := hmacSHA512(signString, merchantSercet)
 
 	//postJson
-	postPayOutRequestDemo(timestamp, merchantId, signatureString, baseUrl, accessToken, payoutRequest)
+	postPayInRequestDemoV1(timestamp, merchantId, signatureString, baseUrl, accessToken, payRequest)
 }
 
-func postPayOutRequestDemo(timestamp string, merchantId string, signatureString string, baseUrl string, accessToken string, payoutRequest PayOutRequest) string {
+func postPayInRequestDemoV1(timestamp string, merchantId string, signatureString string, baseUrl string, accessToken string, payRequest PayInRequest) string {
 	// Create the JSON payload
-	requestJson, _ := json.Marshal(payoutRequest)
+	requestJson, _ := json.Marshal(payRequest)
 
 	// Send the POST request
-	url := baseUrl + "/v1.0/disbursement/cash-out"
+	url := baseUrl + "/v1.0/transaction/pay-in"
 	fmt.Println("request path:" + url)
 	fmt.Println("request request param:" + string(requestJson))
 	request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestJson))

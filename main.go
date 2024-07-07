@@ -11,7 +11,8 @@ func main() {
 	//then AccessToken
 	//v1.AccessToken()
 
-	v1.PayOutRequestDemo()
+	//v1.PayOutRequestDemo()
+	v1.PayInRequestDemoV1()
 
 	//fmt.Println(v1.GetTimeStamp())
 	//

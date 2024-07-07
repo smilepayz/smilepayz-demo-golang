@@ -10,11 +10,10 @@ import (
 	"strings"
 )
 
-func PayInRequestDemoV1() {
+func PayInRequestDemoV2() {
 
 	fmt.Println("=====> step2 : Create Access Token. You need set your timestamp|clientKey|privateKey")
 
-	accessToken := AccessToken()
 	//get time
 	timestamp := common.GetTimeStamp()
 	//get merchantId from merchant platform
@@ -37,22 +36,20 @@ func PayInRequestDemoV1() {
 		Area:     10, PaymentMethod: "BCA"}
 	requestJson, _ := json.Marshal(payRequest)
 
-	lowerString := common.LowerHexSha256Body(string(requestJson))
-
-	signString := "POST:/v1.0/transaction/pay-in:" + accessToken + ":" + lowerString + ":" + timestamp
+	signString := timestamp + "|" + merchantSecret + "|" + string(requestJson)
 	//signature
-	signatureString, _ := common.HmacSHA512(signString, merchantSecret)
+	signatureString, _ := common.Sha256RshSignature(signString, common.PrivateKeyStr)
 
 	//postJson
-	postPayInRequestDemoV1(timestamp, merchantId, signatureString, baseUrl, accessToken, payRequest)
+	postPayInRequestDemoV2(timestamp, merchantId, signatureString, baseUrl, payRequest)
 }
 
-func postPayInRequestDemoV1(timestamp string, merchantId string, signatureString string, baseUrl string, accessToken string, payRequest common.PayInRequest) string {
+func postPayInRequestDemoV2(timestamp string, merchantId string, signatureString string, baseUrl string, payRequest common.PayInRequest) string {
 	// Create the JSON payload
 	requestJson, _ := json.Marshal(payRequest)
 
 	// Send the POST request
-	url := baseUrl + "/v1.0/transaction/pay-in"
+	url := baseUrl + "/v2.0/transaction/pay-in"
 	fmt.Println("request path:" + url)
 	fmt.Println("request request param:" + string(requestJson))
 	request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestJson))
@@ -66,8 +63,6 @@ func postPayInRequestDemoV1(timestamp string, merchantId string, signatureString
 	request.Header.Add("X-TIMESTAMP", timestamp)
 	request.Header.Add("X-PARTNER-ID", merchantId)
 	request.Header.Add("X-SIGNATURE", signatureString)
-	request.Header.Add("X-EXTERNAL-ID", timestamp)
-	request.Header.Add("Authorization", "Bearer  "+accessToken)
 
 	// Send the request
 	client := http.Client{}

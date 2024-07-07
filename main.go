@@ -1,6 +1,8 @@
 package main
 
-import v1 "TheSmilePay-SDK-Golang/v1"
+import (
+	v2 "TheSmilePay-SDK-Golang/v2"
+)
 
 func main() {
 	//fmt.Println("Hello, World!")
@@ -12,7 +14,10 @@ func main() {
 	//v1.AccessToken()
 
 	//v1.PayOutRequestDemo()
-	v1.PayInRequestDemoV1()
+	//v1.PayInRequestDemoV1()
+
+	//v2.PayOutRequestDemoV2()
+	v2.PayInRequestDemoV2()
 
 	//fmt.Println(v1.GetTimeStamp())
 	//

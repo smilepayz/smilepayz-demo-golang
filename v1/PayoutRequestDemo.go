@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 )
 
 func PayOutRequestDemo() {
@@ -19,7 +20,9 @@ func PayOutRequestDemo() {
 	//get merchantId from merchant platform
 	merchantId := common.MerchantIdSandBox
 	baseUrl := common.BaseUrlSanbox
-	merchantSercet := common.MerchantSecretSandBox
+	merchantSecret := common.MerchantSecretSandBox
+	orderNo := strings.Replace(merchantId, "sandbox-", "S", 1) + common.CustomUUID()
+
 	//build string to sign
 	stringToSign := merchantId + "|" + timestamp
 	fmt.Println(stringToSign)
@@ -27,7 +30,7 @@ func PayOutRequestDemo() {
 	money := common.Money{Currency: "IDR", Amount: 10000}
 	merchant := common.Merchant{MerchantId: merchantId}
 
-	payoutRequest := common.PayOutRequest{OrderNo: merchantId + "ddfd",
+	payoutRequest := common.PayOutRequest{OrderNo: orderNo[:32],
 		Purpose:     "for test demo",
 		Merchant:    merchant,
 		Money:       money,
@@ -38,7 +41,7 @@ func PayOutRequestDemo() {
 
 	signString := "POST:" + "/v1.0/disbursement/cash-out" + ":" + accessToken + ":" + lowerString + ":" + timestamp
 	//signature
-	signatureString, _ := common.HmacSHA512(signString, merchantSercet)
+	signatureString, _ := common.HmacSHA512(signString, merchantSecret)
 
 	//postJson
 	postPayOutRequestDemo(timestamp, merchantId, signatureString, baseUrl, accessToken, payoutRequest)

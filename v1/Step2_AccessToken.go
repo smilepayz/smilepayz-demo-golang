@@ -12,7 +12,7 @@ type Data struct {
 	Message string `json:"grantType"`
 }
 
-func AccessToken() {
+func AccessToken() string {
 	fmt.Println("=====> step2 : Create Access Token. You need set your timestamp|clientKey|privateKey")
 
 	//get time
@@ -27,11 +27,11 @@ func AccessToken() {
 	//signature
 	signatureString, done := Sha256RshSignature(stringToSign, PrivateKeyStr)
 	if done {
-		return
+		return ""
 	}
 
 	//postJson
-	postAccessTokenRequest(timestamp, merchantId, signatureString, baseUrl)
+	return postAccessTokenRequest(timestamp, merchantId, signatureString, baseUrl)
 }
 
 func postAccessTokenRequest(timestamp string, merchantId string, signatureString string, baseUrl string) string {

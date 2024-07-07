@@ -8,44 +8,49 @@ import (
 	"net/http"
 )
 
-func payOutRequestDemo() {
+func PayOutRequestDemo() {
 	fmt.Println("=====> step2 : Create Access Token. You need set your timestamp|clientKey|privateKey")
 
+	accessToken := AccessToken()
 	//get time
 	timestamp := GetTimeStamp()
 	//get merchantId from merchant platform
 	merchantId := merchantIdSandBox
 	baseUrl := baseUrlSanbox
+	merchantSercet := merchantSecretSandBox
 	//build string to sign
 	stringToSign := merchantId + "|" + timestamp
 	fmt.Println(stringToSign)
 
+	money := Money{Currency: "IDR", Amount: 10000}
+	merchant := Merchant{MerchantId: merchantId}
+
+	payoutRequest := PayOutRequest{OrderNo: merchantId + "ddfd",
+		Purpose:     "for test demo",
+		Merchant:    merchant,
+		Money:       money,
+		CashAccount: "1231232132", Area: 10, PaymentMethod: "BCA"}
+	requestJson, _ := json.Marshal(payoutRequest)
+
+	lowerString := LowerHexSha256Body(string(requestJson))
+
+	signString := "POST:" + "/v1.0/disbursement/cash-out" + ":" + accessToken + ":" + lowerString + ":" + timestamp
 	//signature
-	signatureString, done := Sha256RshSignature(stringToSign, PrivateKeyStr)
-	if done {
-		return
-	}
+	signatureString, _ := hmacSHA512(signString, merchantSercet)
 
 	//postJson
-	postAccessTokenRequest(timestamp, merchantId, signatureString, baseUrl)
+	postPayOutRequestDemo(timestamp, merchantId, signatureString, baseUrl, accessToken, payoutRequest)
 }
 
-func postPayOutRequestDemo(timestamp string, merchantId string, signatureString string, baseUrl string) string {
+func postPayOutRequestDemo(timestamp string, merchantId string, signatureString string, baseUrl string, accessToken string, payoutRequest PayOutRequest) string {
 	// Create the JSON payload
-	data := Data{
-		Message: "client_credentials",
-	}
-
-	jsonPayload, err := json.Marshal(data)
-	if err != nil {
-		fmt.Println("Error marshaling JSON:", err)
-		return ""
-	}
+	requestJson, _ := json.Marshal(payoutRequest)
 
 	// Send the POST request
-	url := baseUrl + "/v1.0/access-token/b2b"
+	url := baseUrl + "/v1.0/disbursement/cash-out"
 	fmt.Println("request path:" + url)
-	request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(jsonPayload))
+	fmt.Println("request request param:" + string(requestJson))
+	request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestJson))
 	if err != nil {
 		fmt.Println("Error creating request:", err)
 		return ""
@@ -54,8 +59,10 @@ func postPayOutRequestDemo(timestamp string, merchantId string, signatureString 
 	// Add custom headers
 	request.Header.Add("Content-Type", "application/json")
 	request.Header.Add("X-TIMESTAMP", timestamp)
-	request.Header.Add("X-CLIENT-KEY", merchantId)
+	request.Header.Add("X-PARTNER-ID", merchantId)
 	request.Header.Add("X-SIGNATURE", signatureString)
+	request.Header.Add("X-EXTERNAL-ID", timestamp)
+	request.Header.Add("Authorization", "Bearer  "+accessToken)
 
 	// Send the request
 	client := http.Client{}

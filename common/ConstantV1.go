@@ -7,7 +7,6 @@ const PublicKeyStr = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAty25nz4Yxlyfmu
 const BaseUrlSandbox = "https://sandbox-gateway-test.smilepayz.com"
 
 const BaseUrl = "https://gateway-test.smilepayz.com"
-
 const MerchantId = "20019"
 
 const MerchantIdSandBox = "sandbox-20019"

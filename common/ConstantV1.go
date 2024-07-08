@@ -14,3 +14,16 @@ const MerchantIdSandBox = "sandbox-20019"
 const MerchantSecret = "95b57c46b8c2e068982be23fb669a80612cad68e6ce6ba4f5af9ec20d23bb274"
 
 const MerchantSecretSandBox = "6a58a603e5043290f4097ee4a7745661b3656932d4eebc3106b5dddc3af6e053"
+
+const INDONESIA_CODE = 10
+const THAILAND_CODE = 11
+const INDIA_CODE = 12
+const BRAZIL_CODE = 13
+
+const INDONESIA_CURRENCY = "IDR"
+const THAILAND_CURRENCY = "THB"
+const INDIA_CURRENCY = "INR"
+const BRAZIL_CURRENCY = "BRL"
+
+const TRADE_TYPE_PAY_IN = 1
+const TRADE_TPYE_PAY_OUT = 2

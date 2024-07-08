@@ -12,7 +12,7 @@ import (
 
 func PayInRequestDemoV2(env string) {
 
-	fmt.Println("=====> step2 : Create Access Token. You need set your timestamp|clientKey|privateKey")
+	fmt.Println("=====> pay in request demo v2 =====")
 
 	//get merchantId from merchant platform
 	merchantId := ""
@@ -37,14 +37,15 @@ func PayInRequestDemoV2(env string) {
 	stringToSign := merchantId + "|" + timestamp
 	fmt.Println(stringToSign)
 
-	money := common.Money{Currency: "INR", Amount: 1000}
+	money := common.Money{Currency: common.INDIA_CURRENCY, Amount: 1000}
 	merchant := common.Merchant{MerchantId: merchantId}
 
 	payRequest := common.PayInRequest{OrderNo: orderNo[:32],
 		Purpose:  "for test demo",
 		Merchant: merchant,
 		Money:    money,
-		Area:     12, PaymentMethod: "P2P"}
+		Area:     common.INDIA_CODE, PaymentMethod: "P2P"}
+
 	requestJson, _ := json.Marshal(payRequest)
 
 	signString := timestamp + "|" + merchantSecret + "|" + string(requestJson)

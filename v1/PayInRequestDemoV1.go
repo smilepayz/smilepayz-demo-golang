@@ -19,7 +19,7 @@ func PayInRequestDemoV1() {
 	timestamp := common.GetTimeStamp()
 	//get merchantId from merchant platform
 	merchantId := common.MerchantIdSandBox
-	baseUrl := common.BaseUrlSanbox
+	baseUrl := common.BaseUrl
 	merchantSecret := common.MerchantSecretSandBox
 	orderNo := strings.Replace(merchantId, "sandbox-", "S", 1) + common.CustomUUID()
 

@@ -20,7 +20,7 @@ func AccessToken() string {
 	timestamp := common.GetTimeStamp()
 	//get merchantId from merchant platform
 	merchantId := common.MerchantIdSandBox
-	baseUrl := common.BaseUrlSanbox
+	baseUrl := common.BaseUrlSandbox
 	//build string to sign
 	stringToSign := merchantId + "|" + timestamp
 	fmt.Println(stringToSign)

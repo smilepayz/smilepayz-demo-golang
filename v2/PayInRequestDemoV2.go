@@ -1,4 +1,4 @@
-package v1
+package v2
 
 import (
 	"TheSmilePay-SDK-Golang/common"
@@ -10,30 +10,41 @@ import (
 	"strings"
 )
 
-func PayInRequestDemoV2() {
+func PayInRequestDemoV2(env string) {
 
 	fmt.Println("=====> step2 : Create Access Token. You need set your timestamp|clientKey|privateKey")
 
+	//get merchantId from merchant platform
+	merchantId := ""
+	baseUrl := ""
+	merchantSecret := ""
+	if env == "sandbox" {
+		merchantId = common.MerchantIdSandBox
+		baseUrl = common.BaseUrlSandbox
+		merchantSecret = common.MerchantSecretSandBox
+	}
+	if env == "pro" {
+		merchantId = common.MerchantId
+		baseUrl = common.BaseUrl
+		merchantSecret = common.MerchantSecret
+	}
 	//get time
 	timestamp := common.GetTimeStamp()
-	//get merchantId from merchant platform
-	merchantId := common.MerchantIdSandBox
-	baseUrl := common.BaseUrlSanbox
-	merchantSecret := common.MerchantSecretSandBox
+
 	orderNo := strings.Replace(merchantId, "sandbox-", "S", 1) + common.CustomUUID()
 
 	//build string to sign
 	stringToSign := merchantId + "|" + timestamp
 	fmt.Println(stringToSign)
 
-	money := common.Money{Currency: "IDR", Amount: 10000}
+	money := common.Money{Currency: "INR", Amount: 1000}
 	merchant := common.Merchant{MerchantId: merchantId}
 
 	payRequest := common.PayInRequest{OrderNo: orderNo[:32],
 		Purpose:  "for test demo",
 		Merchant: merchant,
 		Money:    money,
-		Area:     10, PaymentMethod: "BCA"}
+		Area:     12, PaymentMethod: "P2P"}
 	requestJson, _ := json.Marshal(payRequest)
 
 	signString := timestamp + "|" + merchantSecret + "|" + string(requestJson)
@@ -82,23 +93,11 @@ func postPayInRequestDemoV2(timestamp string, merchantId string, signatureString
 		return ""
 
 	}
-
 	// 打印响应状态码
 	fmt.Println("Status Code:", response.StatusCode)
-
 	bodyString := string(body)
 	// 打印响应体
 	fmt.Println("Response Body:", bodyString)
 
-	var accessTokenBean common.AccessTokenBean
-
-	err = json.Unmarshal([]byte(bodyString), &accessTokenBean)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return ""
-
-	}
-	fmt.Println("Email:", accessTokenBean.AccessToken)
-	return accessTokenBean.AccessToken
-
+	return bodyString
 }

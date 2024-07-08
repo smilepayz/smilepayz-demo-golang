@@ -87,20 +87,16 @@ func postPayOutRequestDemoV2(timestamp string, merchantId string, signatureStrin
 
 	body, err := io.ReadAll(response.Body)
 
-	// 读取响应体
+	// read response body
 	if err != nil {
 		fmt.Println("Error:", err)
 		return ""
 
 	}
-
-	// 打印响应状态码
-	fmt.Println("Status Code:", response.StatusCode)
-
 	bodyString := string(body)
-	// 打印响应体
+	// log response data
 	fmt.Println("Response Body:", bodyString)
-	// 打印响应状态码
+	// log response code
 	fmt.Println("Status Code:", response.StatusCode)
 
 	return bodyString

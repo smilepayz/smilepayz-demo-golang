@@ -14,10 +14,10 @@ func main() {
 	//v1.PayOutRequestDemo()
 	//v1.PayInRequestDemoV1()
 
-	//v2.PayOutRequestDemoV2("pro")
+	v2.PayOutRequestDemoV2("pro")
 	v2.PayInRequestDemoV2("pro")
-	//v2.BalanceInquiryDemoV2()
-	//v2.OrderStatusInquiryDemo()
+	v2.BalanceInquiryDemoV2("pro")
+	v2.OrderStatusInquiryDemo("pro")
 
 	//fmt.Println(v1.GetTimeStamp())
 	//

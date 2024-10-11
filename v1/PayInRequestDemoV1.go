@@ -18,17 +18,19 @@ func PayInRequestDemoV1() {
 	//get time
 	timestamp := common.GetTimeStamp()
 	//get merchantId from merchant platform
-	merchantId := common.MerchantIdSandBox
-	baseUrl := common.BaseUrl
+	/*merchantId := common.MerchantIdSandBox
+	*
+	*
+	 */baseUrl := common.BaseUrl
 	merchantSecret := common.MerchantSecretSandBox
-	orderNo := strings.Replace(merchantId, "sandbox-", "S", 1) + common.CustomUUID()
+	orderNo := strings.Replace(common.MerchantId, "sandbox-", "S", 1) + common.CustomUUID()
 
 	//build string to sign
-	stringToSign := merchantId + "|" + timestamp
+	stringToSign := common.MerchantId + "|" + timestamp
 	fmt.Println(stringToSign)
 
 	money := common.Money{Currency: "IDR", Amount: 10000}
-	merchant := common.Merchant{MerchantId: merchantId}
+	merchant := common.Merchant{MerchantId: common.MerchantId}
 
 	payRequest := common.PayInRequest{OrderNo: orderNo[:32],
 		Purpose:  "for test demo",
@@ -44,7 +46,7 @@ func PayInRequestDemoV1() {
 	signatureString, _ := common.HmacSHA512(signString, merchantSecret)
 
 	//postJson
-	postPayInRequestDemoV1(timestamp, merchantId, signatureString, baseUrl, accessToken, payRequest)
+	postPayInRequestDemoV1(timestamp, common.MerchantId, signatureString, baseUrl, accessToken, payRequest)
 }
 
 func postPayInRequestDemoV1(timestamp string, merchantId string, signatureString string, baseUrl string, accessToken string, payRequest common.PayInRequest) string {

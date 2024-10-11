@@ -38,15 +38,23 @@ func PayOutRequestDemoV2(env string) {
 	stringToSign := merchantId + "|" + timestamp
 	fmt.Println(stringToSign)
 
-	money := common.Money{Currency: "INR", Amount: 200}
+	//demo for INDONESIA  ,replace Currency to you what need
+	money := common.Money{Currency: "IDR", Amount: 200000}
 	merchant := common.Merchant{MerchantId: merchantId}
-	addition := common.AdditionParam{IfscCode: "YESB0000097"}
+	// IfscCode is required for INR transaction
+	// TaxNumber is required for BRL transaction
+	addition := common.AdditionParam{IfscCode: "YESB0000097", TaxNumber: "123456789"}
+
+	//demo for INDONESIA  ,replace Area ,PaymentMethod to you what need
 	payoutRequest := common.PayOutRequest{OrderNo: orderNo[:32],
-		Purpose:     "for test demo",
-		Merchant:    merchant,
-		Money:       money,
-		CashAccount: "17385238451", Area: 12, PaymentMethod: "YES",
-		AdditionalParam: addition}
+		Purpose:         "for test demo",
+		Merchant:        merchant,
+		Money:           money,
+		CashAccount:     "17385238451",
+		Area:            12,
+		PaymentMethod:   "BCA",
+		AdditionalParam: addition,
+	}
 	requestJson, _ := json.Marshal(payoutRequest)
 
 	signString := timestamp + "|" + merchantSecret + "|" + string(requestJson)

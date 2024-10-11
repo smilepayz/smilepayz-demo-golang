@@ -37,14 +37,21 @@ func PayInRequestDemoV2(env string) {
 	stringToSign := merchantId + "|" + timestamp
 	fmt.Println(stringToSign)
 
-	money := common.Money{Currency: common.INDIA_CURRENCY, Amount: 1000}
+	//demo for INDONESIA  ,replace Currency to you what need
+	money := common.Money{Currency: common.INDONESIA_CURRENCY, Amount: 1000}
 	merchant := common.Merchant{MerchantId: merchantId}
+	// PayerAccountNo is required for THB transaction
+	additionParam := common.AdditionParam{PayerAccountNo: "your payer bank account no"}
 
+	//fixme demo for INDONESIA  ,replace Area,PaymentMethod to you what need
 	payRequest := common.PayInRequest{OrderNo: orderNo[:32],
-		Purpose:  "for test demo",
-		Merchant: merchant,
-		Money:    money,
-		Area:     common.INDIA_CODE, PaymentMethod: "P2P"}
+		Purpose:       "for test demo",
+		Merchant:      merchant,
+		Money:         money,
+		Area:          common.INDONESIA_CODE,
+		PaymentMethod: "QRIS",
+		AdditionParam: additionParam,
+	}
 
 	requestJson, _ := json.Marshal(payRequest)
 

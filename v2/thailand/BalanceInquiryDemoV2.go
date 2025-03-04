@@ -6,29 +6,22 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"smilepayz-demo-golang/common"
+	"smilepayz-demo-golang/v2/thailand/bean"
 )
 
-func BalanceInquiryDemoV2(env string) {
+func BalanceInquiryDemoV2(env string, merchantId string, merchantSecret string, privateKey string, accountNo string) {
 
 	fmt.Println("=====>balance inquiry demo")
 	//get merchantId from merchant platform
-	merchantId := ""
 	baseUrl := ""
-	merchantSecret := ""
 	if env == "sandbox" {
-		merchantId = common.MerchantIdSandBox
-		baseUrl = common.BaseUrlSandbox
-		merchantSecret = common.MerchantSecretSandBox
+		baseUrl = bean.BaseUrlSandbox
 	}
 	if env == "pro" {
-		merchantId = common.MerchantId
-		baseUrl = common.BaseUrl
-		merchantSecret = common.MerchantSecret
+		baseUrl = bean.BaseUrl
 	}
-
 	//get time
-	timestamp := common.GetTimeStamp()
+	timestamp := bean.GetTimeStamp()
 
 	//build string to sign
 	stringToSign := merchantId + "|" + timestamp
@@ -36,20 +29,21 @@ func BalanceInquiryDemoV2(env string) {
 
 	var balanceTypes []string
 	balanceTypes = append(balanceTypes, "BALANCE")
-	balanceInquiry := common.BalanceInquiryRequest{AccountNo: "21220019202402271029",
+	balanceInquiry := bean.BalanceInquiryRequest{
+		AccountNo:    accountNo,
 		BalanceTypes: balanceTypes,
 	}
 	requestJson, _ := json.Marshal(balanceInquiry)
 
 	signString := timestamp + "|" + merchantSecret + "|" + string(requestJson)
 	//signature
-	signatureString, _ := common.Sha256RshSignature(signString, common.PrivateKeyStr)
+	signatureString, _ := bean.Sha256RshSignature(signString, privateKey)
 
 	//postJson
 	postBalanceInquiryV2(timestamp, merchantId, signatureString, baseUrl, balanceInquiry)
 }
 
-func postBalanceInquiryV2(timestamp string, merchantId string, signatureString string, baseUrl string, balanceInquiry common.BalanceInquiryRequest) string {
+func postBalanceInquiryV2(timestamp string, merchantId string, signatureString string, baseUrl string, balanceInquiry bean.BalanceInquiryRequest) string {
 	// Create the JSON payload
 	requestJson, _ := json.Marshal(balanceInquiry)
 

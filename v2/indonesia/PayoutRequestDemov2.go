@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"smilepayz-demo-golang/v2/india/bean"
+	"smilepayz-demo-golang/v2/indonesia/bean"
 	"strings"
 )
 
-func PayOutRequestDemoV2(env string, merchantId string, merchantSecret string, privateKey string, paymentMethod string, cashAccount string, amount int, ifscCode string) {
+func PayOutRequestDemoV2(env string, merchantId string, merchantSecret string, privateKey string, paymentMethod string, cashAccount string, amount int) {
 
 	fmt.Println("=====> start")
 	//get merchantId from merchant platform
@@ -29,7 +29,7 @@ func PayOutRequestDemoV2(env string, merchantId string, merchantSecret string, p
 	stringToSign := merchantId + "|" + timestamp
 	fmt.Println(stringToSign)
 
-	money := bean.Money{Currency: bean.INDIA_CURRENCY, Amount: amount}
+	money := bean.Money{Currency: bean.INDONESIA_CURRENCY, Amount: amount}
 	merchant := bean.Merchant{MerchantId: merchantId}
 
 	//demo for INDONESIA  ,replace Area ,PaymentMethod to you what need
@@ -38,8 +38,7 @@ func PayOutRequestDemoV2(env string, merchantId string, merchantSecret string, p
 		Merchant:      merchant,
 		Money:         money,
 		CashAccount:   cashAccount,
-		IfscCode:      ifscCode,
-		Area:          bean.INDIA_CODE,
+		Area:          bean.INDONESIA_CODE,
 		PaymentMethod: paymentMethod,
 	}
 	requestJson, _ := json.Marshal(payoutRequest)

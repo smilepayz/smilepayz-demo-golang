@@ -7,7 +7,6 @@ import (
 	"io"
 	"net/http"
 	"smilepayz-demo-golang/v2/brazil/bean"
-	_ "smilepayz-demo-golang/v2/brazil/bean"
 	"strings"
 )
 

@@ -6,51 +6,40 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"smilepayz-demo-golang/common"
+	"smilepayz-demo-golang/v2/mexico/bean"
 )
 
-func OrderStatusInquiryDemo(env string) {
+func OrderStatusInquiryDemo(env string, merchantId string, merchantSecret string, privateKey string, tradeNo string, orderNo string, tradeType int) {
 
 	fmt.Println("=====> order status inquiry demo =====")
 
 	//get merchantId from merchant platform
-	merchantId := ""
 	baseUrl := ""
-	merchantSecret := ""
 	if env == "sandbox" {
-		merchantId = common.MerchantIdSandBox
-		baseUrl = common.BaseUrlSandbox
-		merchantSecret = common.MerchantSecretSandBox
+		baseUrl = bean.BaseUrlSandbox
 	}
 	if env == "pro" {
-		merchantId = common.MerchantId
-		baseUrl = common.BaseUrl
-		merchantSecret = common.MerchantSecret
+		baseUrl = bean.BaseUrl
 	}
-
 	//get time
-	timestamp := common.GetTimeStamp()
-
+	timestamp := bean.GetTimeStamp()
 	//build string to sign
 	stringToSign := merchantId + "|" + timestamp
 	fmt.Println(stringToSign)
 
-	balanceInquiry := common.OrderStatusInquiryRequest{TradeType: common.TRADE_TYPE_PAY_IN,
-		OrderNo: "121200302403201413261588",
+	balanceInquiry := bean.OrderStatusInquiryRequest{
+		TradeType: tradeType,
+		OrderNo:   orderNo,
+		TradeNo:   tradeNo,
 	}
 	requestJson, _ := json.Marshal(balanceInquiry)
 
 	signString := timestamp + "|" + merchantSecret + "|" + string(requestJson)
 	//signature
-	signatureString, _ := common.Sha256RshSignature(signString, common.PrivateKeyStr)
-
+	signatureString, _ := bean.Sha256RshSignature(signString, privateKey)
 	//postJson
-	postOrderInquiryRequestV2(timestamp, merchantId, signatureString, baseUrl, balanceInquiry)
-}
-
-func postOrderInquiryRequestV2(timestamp string, merchantId string, signatureString string, baseUrl string, balanceInquiry common.OrderStatusInquiryRequest) string {
 	// Create the JSON payload
-	requestJson, _ := json.Marshal(balanceInquiry)
+	requestJson, _ = json.Marshal(balanceInquiry)
 
 	// Send the POST request
 	url := baseUrl + "/v2.0/inquiry-status"
@@ -59,7 +48,6 @@ func postOrderInquiryRequestV2(timestamp string, merchantId string, signatureStr
 	request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestJson))
 	if err != nil {
 		fmt.Println("Error creating request:", err)
-		return ""
 	}
 
 	// Add custom headers
@@ -73,27 +61,19 @@ func postOrderInquiryRequestV2(timestamp string, merchantId string, signatureStr
 	response, err := client.Do(request)
 	if err != nil {
 		fmt.Println("Error sending request:", err)
-		return ""
-
 	}
 	defer response.Body.Close()
-
 	body, err := io.ReadAll(response.Body)
 
 	// get response body
 	if err != nil {
 		fmt.Println("Error:", err)
-		return ""
-
 	}
-
 	// log response status
 	fmt.Println("Status Code:", response.StatusCode)
 
 	bodyString := string(body)
 	// log response body
 	fmt.Println("Response Body:", bodyString)
-
-	return bodyString
 
 }

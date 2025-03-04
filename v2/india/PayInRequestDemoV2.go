@@ -6,8 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"smilepayz-demo-golang/v2/brazil/bean"
-	_ "smilepayz-demo-golang/v2/brazil/bean"
+	"smilepayz-demo-golang/v2/india/bean"
 	"strings"
 )
 

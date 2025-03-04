@@ -6,64 +6,54 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"smilepayz-demo-golang/common"
+	"smilepayz-demo-golang/v2/mexico/bean"
 	"strings"
 )
 
-func PayInRequestDemoV2(env string) {
+func PayInRequestDemoV2(env string, merchantId string, merchantSecret string, privateKey string, paymentMethod string, amount int) {
 
 	fmt.Println("=====> pay in request demo v2 =====")
 
 	//get merchantId from merchant platform
-	merchantId := ""
 	baseUrl := ""
-	merchantSecret := ""
 	if env == "sandbox" {
-		merchantId = common.MerchantIdSandBox
-		baseUrl = common.BaseUrlSandbox
-		merchantSecret = common.MerchantSecretSandBox
+		baseUrl = bean.BaseUrlSandbox
 	}
 	if env == "pro" {
-		merchantId = common.MerchantId
-		baseUrl = common.BaseUrl
-		merchantSecret = common.MerchantSecret
+		baseUrl = bean.BaseUrl
 	}
 	//get time
-	timestamp := common.GetTimeStamp()
+	timestamp := bean.GetTimeStamp()
 
-	orderNo := strings.Replace(merchantId, "sandbox-", "S", 1) + common.CustomUUID()
+	orderNo := strings.Replace(merchantId, "sandbox-", "S", 1) + bean.CustomUUID()
 
 	//build string to sign
 	stringToSign := merchantId + "|" + timestamp
 	fmt.Println(stringToSign)
 
-	//demo for INDONESIA  ,replace Currency to you what need
-	money := common.Money{Currency: common.INDONESIA_CURRENCY, Amount: 1000}
-	merchant := common.Merchant{MerchantId: merchantId}
-	// PayerAccountNo is required for THB transaction
-	additionParam := common.AdditionParam{PayerAccountNo: "your payer bank account no"}
+	money := bean.Money{Currency: bean.MEXICO_CURRENCY, Amount: amount}
+	merchant := bean.Merchant{MerchantId: merchantId}
 
-	//fixme demo for INDONESIA  ,replace Area,PaymentMethod to you what need
-	payRequest := common.PayInRequest{OrderNo: orderNo[:32],
+	payRequest := bean.PayInRequest{
+		OrderNo:       orderNo[:32],
 		Purpose:       "for test demo",
 		Merchant:      merchant,
 		Money:         money,
-		Area:          common.INDONESIA_CODE,
-		PaymentMethod: "QRIS",
-		AdditionParam: additionParam,
+		Area:          bean.MEXICO_CODE,
+		PaymentMethod: paymentMethod,
 	}
 
 	requestJson, _ := json.Marshal(payRequest)
 
 	signString := timestamp + "|" + merchantSecret + "|" + string(requestJson)
 	//signature
-	signatureString, _ := common.Sha256RshSignature(signString, common.PrivateKeyStr)
+	signatureString, _ := bean.Sha256RshSignature(signString, privateKey)
 
 	//postJson
 	postPayInRequestDemoV2(timestamp, merchantId, signatureString, baseUrl, payRequest)
 }
 
-func postPayInRequestDemoV2(timestamp string, merchantId string, signatureString string, baseUrl string, payRequest common.PayInRequest) string {
+func postPayInRequestDemoV2(timestamp string, merchantId string, signatureString string, baseUrl string, payRequest bean.PayInRequest) string {
 	// Create the JSON payload
 	requestJson, _ := json.Marshal(payRequest)
 

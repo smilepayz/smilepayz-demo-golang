@@ -6,13 +6,12 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"smilepayz-demo-golang/v2/india/bean"
-	"strings"
+	"smilepayz-demo-golang/v2/mexico/bean"
 )
 
-func PayOutRequestDemoV2(env string, merchantId string, merchantSecret string, privateKey string, paymentMethod string, cashAccount string, amount int, ifscCode string) {
+func BalanceInquiryDemoV2(env string, merchantId string, merchantSecret string, privateKey string, accountNo string) {
 
-	fmt.Println("=====> start")
+	fmt.Println("=====>balance inquiry demo")
 	//get merchantId from merchant platform
 	baseUrl := ""
 	if env == "sandbox" {
@@ -24,38 +23,32 @@ func PayOutRequestDemoV2(env string, merchantId string, merchantSecret string, p
 	//get time
 	timestamp := bean.GetTimeStamp()
 
-	orderNo := strings.Replace(merchantId, "sandbox-", "S", 1) + bean.CustomUUID()
 	//build string to sign
 	stringToSign := merchantId + "|" + timestamp
 	fmt.Println(stringToSign)
 
-	money := bean.Money{Currency: bean.INDIA_CURRENCY, Amount: amount}
-	merchant := bean.Merchant{MerchantId: merchantId}
-
-	//demo for INDONESIA  ,replace Area ,PaymentMethod to you what need
-	payoutRequest := bean.PayOutRequest{OrderNo: orderNo[:32],
-		Purpose:       "for test demo",
-		Merchant:      merchant,
-		Money:         money,
-		CashAccount:   cashAccount,
-		IfscCode:      ifscCode,
-		Area:          bean.INDIA_CODE,
-		PaymentMethod: paymentMethod,
+	var balanceTypes []string
+	balanceTypes = append(balanceTypes, "BALANCE")
+	balanceInquiry := bean.BalanceInquiryRequest{
+		AccountNo:    accountNo,
+		BalanceTypes: balanceTypes,
 	}
-	requestJson, _ := json.Marshal(payoutRequest)
+	requestJson, _ := json.Marshal(balanceInquiry)
 
 	signString := timestamp + "|" + merchantSecret + "|" + string(requestJson)
 	//signature
 	signatureString, _ := bean.Sha256RshSignature(signString, privateKey)
-	postPayOutRequestDemoV2(timestamp, merchantId, signatureString, baseUrl, payoutRequest)
+
+	//postJson
+	postBalanceInquiryV2(timestamp, merchantId, signatureString, baseUrl, balanceInquiry)
 }
 
-func postPayOutRequestDemoV2(timestamp string, merchantId string, signatureString string, baseUrl string, payoutRequest bean.PayOutRequest) string {
+func postBalanceInquiryV2(timestamp string, merchantId string, signatureString string, baseUrl string, balanceInquiry bean.BalanceInquiryRequest) string {
 	// Create the JSON payload
-	requestJson, _ := json.Marshal(payoutRequest)
+	requestJson, _ := json.Marshal(balanceInquiry)
 
 	// Send the POST request
-	url := baseUrl + "/v2.0/disbursement/pay-out"
+	url := baseUrl + "/v2.0/inquiry-balance"
 	fmt.Println("request path:" + url)
 	fmt.Println("request request param:" + string(requestJson))
 	request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestJson))
@@ -82,18 +75,16 @@ func postPayOutRequestDemoV2(timestamp string, merchantId string, signatureStrin
 
 	body, err := io.ReadAll(response.Body)
 
-	// read response body
+	// get response body
 	if err != nil {
 		fmt.Println("Error:", err)
 		return ""
-
 	}
-	bodyString := string(body)
-	// log response data
-	fmt.Println("Response Body:", bodyString)
-	// log response code
+	// log response status
 	fmt.Println("Status Code:", response.StatusCode)
-
+	bodyString := string(body)
+	// log response body
+	fmt.Println("Response Body:", bodyString)
 	return bodyString
 
 }

@@ -1,6 +1,6 @@
 package main
 
-import v2 "TheSmilePay-SDK-Golang/v2"
+import v2 "smilepayz-demo-golang/v2"
 
 func main() {
 	//fmt.Println("Hello, World!")

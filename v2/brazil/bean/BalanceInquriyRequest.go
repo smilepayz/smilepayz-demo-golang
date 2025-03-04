@@ -1,4 +1,4 @@
-package common
+package bean
 
 type BalanceInquiryRequest struct {
 	AccountNo    string   `json:"accountNo"`

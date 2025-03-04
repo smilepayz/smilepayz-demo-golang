@@ -1,4 +1,4 @@
-package common
+package bean
 
 type Money struct {
 	Amount   int    `json:"amount"`

@@ -1,12 +1,12 @@
-package v2
+package main
 
 import (
-	"TheSmilePay-SDK-Golang/common"
 	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"smilepayz-demo-golang/common"
 )
 
 func OrderStatusInquiryDemo(env string) {

@@ -1,12 +1,12 @@
 package v1
 
 import (
-	"TheSmilePay-SDK-Golang/common"
 	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"smilepayz-demo-golang/common"
 	"strings"
 )
 

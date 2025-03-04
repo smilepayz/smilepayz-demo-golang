@@ -1,4 +1,4 @@
-package common
+package bean
 
 type OrderStatusInquiryRequest struct {
 	TradeType int    `json:"tradeType"`

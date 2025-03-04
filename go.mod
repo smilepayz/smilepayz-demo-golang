@@ -1,3 +1,3 @@
-module TheSmilePay-SDK-Golang
+module smilepayz-demo-golang
 
 go 1.21

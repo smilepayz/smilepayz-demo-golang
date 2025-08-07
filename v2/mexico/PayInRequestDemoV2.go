@@ -39,7 +39,6 @@ func PayInRequestDemoV2(env string, merchantId string, merchantSecret string, pr
 		Purpose:       "for test demo",
 		Merchant:      merchant,
 		Money:         money,
-		Area:          bean.MEXICO_CODE,
 		PaymentMethod: paymentMethod,
 	}
 

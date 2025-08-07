@@ -39,7 +39,6 @@ func PayOutRequestDemoV2(env string, merchantId string, merchantSecret string, p
 		Money:         money,
 		CashAccount:   cashAccount,
 		IfscCode:      ifscCode,
-		Area:          bean.INDIA_CODE,
 		PaymentMethod: paymentMethod,
 	}
 	requestJson, _ := json.Marshal(payoutRequest)

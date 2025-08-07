@@ -39,7 +39,6 @@ func PayOutRequestDemoV2(env string, merchantId string, merchantSecret string, p
 		Merchant:      merchant,
 		Money:         money,
 		CashAccount:   cashAccount,
-		Area:          bean.BRAZIL_CODE,
 		PaymentMethod: paymentMethod,
 		Receiver:      receiver,
 	}

@@ -4,8 +4,6 @@ const BaseUrlSandbox = "https://sandbox-gateway.smilepayz.com"
 
 const BaseUrl = "https://gateway.smilepayz.com"
 
-const BRAZIL_CODE = 13
-
 const BRAZIL_CURRENCY = "BRL"
 
 const TRADE_TYPE_PAY_IN = 1

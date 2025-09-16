@@ -1,4 +1,4 @@
-package main
+package colombia
 
 import (
 	"bytes"
@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"smilepayz-demo-golang/v2/thailand/bean"
+	"smilepayz-demo-golang/v2/colombia/bean"
 )
 
 func BalanceInquiryDemoV2(env string, merchantId string, merchantSecret string, privateKey string, accountNo string) {

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"smilepayz-demo-golang/v2/thailand/bean"
+	"smilepayz-demo-golang/v2/peru/bean"
 )
 
 func OrderStatusInquiryDemo(env string, merchantId string, merchantSecret string, privateKey string, tradeNo string, orderNo string, tradeType int) {

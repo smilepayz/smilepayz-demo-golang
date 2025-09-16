@@ -1,4 +1,4 @@
-package main
+package colombia
 
 import (
 	"bytes"
@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"smilepayz-demo-golang/v2/vietnam/bean"
+	"smilepayz-demo-golang/v2/colombia/bean"
 	"strings"
 )
 
 func PayOutRequestDemoV2(env string, merchantId string, merchantSecret string, privateKey string, paymentMethod string,
-	cashAccount string, cashAccountType string, amount int, name string, email string, phone string) {
+	cashAccount string, cashAccountType string, amount int, name string, email string, phone string, identity string, idType string) {
 
 	fmt.Println("=====> start")
 	//get merchantId from merchant platform
@@ -30,9 +30,9 @@ func PayOutRequestDemoV2(env string, merchantId string, merchantSecret string, p
 	stringToSign := merchantId + "|" + timestamp
 	fmt.Println(stringToSign)
 
-	money := bean.Money{Currency: bean.VIETNAM_CURRENCY, Amount: amount}
+	money := bean.Money{Currency: bean.COLOMBIA_CURRENCY, Amount: amount}
 	merchant := bean.Merchant{MerchantId: merchantId}
-	receiver := bean.Receiver{Name: name, Phone: phone, Email: email}
+	receiver := bean.Receiver{Name: name, Phone: phone, Email: email, Identity: identity, IdType: idType}
 
 	payoutRequest := bean.PayOutRequest{OrderNo: orderNo[:32],
 		Purpose:         "for test demo",

@@ -1,4 +1,4 @@
-package main
+package colombia
 
 import (
 	"bytes"
@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"smilepayz-demo-golang/v2/vietnam/bean"
+	"smilepayz-demo-golang/v2/colombia/bean"
 	"strings"
 )
 
-func PayInRequestDemoV2(env string, merchantId string, merchantSecret string, privateKey string, paymentMethod string, amount int) {
+func PayInRequestDemoV2(env string, merchantId string, merchantSecret string, privateKey string, paymentMethod string, amount int, name string) {
 
 	fmt.Println("=====> pay in request demo v2 =====")
 
@@ -31,8 +31,9 @@ func PayInRequestDemoV2(env string, merchantId string, merchantSecret string, pr
 	stringToSign := merchantId + "|" + timestamp
 	fmt.Println(stringToSign)
 
-	money := bean.Money{Currency: bean.VIETNAM_CURRENCY, Amount: amount}
+	money := bean.Money{Currency: bean.COLOMBIA_CURRENCY, Amount: amount}
 	merchant := bean.Merchant{MerchantId: merchantId}
+	payer := bean.Payer{Name: name}
 
 	payRequest := bean.PayInRequest{
 		OrderNo:       orderNo[:32],
@@ -40,6 +41,7 @@ func PayInRequestDemoV2(env string, merchantId string, merchantSecret string, pr
 		Merchant:      merchant,
 		Money:         money,
 		PaymentMethod: paymentMethod,
+		Payer:         payer,
 	}
 
 	requestJson, _ := json.Marshal(payRequest)
